@@ -297,9 +297,14 @@ paths:
             type: string
         - name: folder_name
           in: query
-          required: true
+          required: false
           schema:
             type: string
+        - name: run_calc
+          in: query
+          required: false
+          schema:
+            type: boolean
       responses:
         '200':
           description: Scenario updated
