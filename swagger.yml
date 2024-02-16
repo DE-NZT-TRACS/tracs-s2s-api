@@ -334,11 +334,11 @@ paths:
       tags:
       - "Result Export"
       summary: Trigger a scenario result download
-      description: Used to dowload scenario calculation results
+      description: Used to dowload scenario calculation results, if no scnearioId is provided the default scenario data will be provided
       parameters:
         - name: scenario_id
           in: query
-          required: true
+          required: false
           schema:
             type: string
       responses:
