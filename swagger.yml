@@ -41,27 +41,24 @@ paths:
       tags:
       - "Retrieve Token"      
       summary: Returns Access token
-      parameters:
-        - name: grant_type
-          in: header
-          required: true
-          schema:
-            type: string
-            enum:
-              - client_credentials
-        - name: client_id
-          in: header
-          required: true
-          schema:
-            type: string
-            enum:
-              - s2s-api
-        - name: client_secret
-          in: header
-          required: true
-          schema:
-            type: string
-          description: Client Secret needed to provided by EVIDEN
+      requestBody:
+        description: Optional description in *Markdown*
+        required: true
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              properties:
+                grant_type:          # <!--- form field name
+                  type: string
+                  description:  client_credentials
+                client_id:    # <!--- form field name
+                  type: string
+                  description: s2s-api
+                client_secret:    # <!--- form field name
+                  description: Secret provided by Eviden
+                  type: string
+
       responses:
         '200':
           description: Access token retrieved successfully
