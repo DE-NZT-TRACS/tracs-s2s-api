@@ -31,10 +31,154 @@ tags:
   description: "S2S API Result Export"
 components:
   securitySchemes:
-    bearerAuth:            # arbitrary name for the security scheme
+    bearerAuth: 
       type: http
       scheme: bearer
-      bearerFormat: JWT    # optional, arbitrary value for documentation purposes
+      bearerFormat: JWT
+      description: "Requires a valid Bearer token in the Authorization header.  Example:          Authorization: Bearer eyJhbGc..."
+  schemas:  
+    Results:   
+      type: object
+      properties:
+        scenario_id:
+          type: string
+          description: Id of the scenario.
+        numTotalEntries:
+          type: float
+          description: Number of entries. 
+        data:
+          type: array
+          description: Array of data entries
+          items:
+            type: object
+            properties:
+              reviewStatus:
+                type: string 
+              odId:
+                type: string 
+              odText:
+                type: string 
+              buId:
+                type: string 
+              region:
+                type: string 
+              companyId:
+                type: string 
+              companyText:
+                type: string 
+              pbgId:
+                type: string 
+              pbgText:
+                type: string 
+              prodLevel1:
+                type: string 
+              prodLevel1Text:
+                type: string 
+              prodLevel2:
+                type: string 
+              prodLevel2Text:
+                type: string 
+              prodLevel3:
+                type: string 
+              prodLevel3Text:
+                type: string 
+              orgAttr1:
+                type: string 
+              orgAttr1Text:
+                type: string 
+              orgAttr2:
+                type: string 
+              orgAttr2Text:
+                type: string 
+              businessProcessId: 
+                type: string 
+              businessProcessText: 
+                type: string 
+              scope1: 
+                type: number 
+              scope2: 
+                type: number
+              scope3: 
+                type: number
+              sumScope123: 
+                type: number
+              biogenicPCF: 
+                type: number
+              RSPOsavings: 
+                type: number
+              PCFinclBiogenic:
+                type: number
+              sumAllPCF: 
+                type: number
+              volume: 
+                type: number
+              areaKey:
+                type: string 
+        rawMaterials:
+          type: array
+          description: Array of data entries
+          items:
+            type: object
+            properties:
+              start_pbg:
+                type: string 
+              productId:
+                type: string 
+              productDescription:
+                type: string 
+              companyId:
+                type: string 
+              companyDescription: 
+                type: string 
+              totalInputFactor:
+                type: number
+              scope3Emission:
+                type: integer
+              emissionContribution:
+                type: number
+              quantity: 
+                type: integer
+              onstageScope3Rawm: 
+                type: integer
+              contributionScope3Rawm: 
+                type: number
+              onstageScope3Transport: 
+                type: number
+              contributionScope3Transport: 
+                type: number
+              isResidue: 
+                type: boolean
+              totalPCF: 
+                type: number
+              sumScope3: 
+                type: number
+              sumScope3Rawm: 
+                type: number
+              sumScope3Transport: 
+                type: number
+              percentageEmissionContribution: 
+                type: number
+              percentageTotalEmissionContribution:
+                type: number
+              datasetRegion:
+                type: string 
+              datasetName: 
+                type: string
+              datasetGUID: 
+                type: string
+              datasetSource: 
+                type: string
+              datasetCas: 
+                type: string
+              flagQualityProduct: 
+                type: number
+              flagQualityRegion: 
+                type: number
+              carbonContentTotal:
+                type: number
+              carbonContentBiogenic:
+                type: number
+       
 paths:
   /s2sapi/v1/auth/token:
     post:
@@ -336,13 +480,13 @@ paths:
         - name: scenarioId
           in: path
           required: true
+          description: allowed to be empty
           schema:
             type: string
       responses:
         '200':
           description: Calculation triggered
           content:
-            application/xlsx:
+            application/json:
               schema:
-                format: binary
-            
+                $ref: '#/components/schemas/Results'
