@@ -483,6 +483,13 @@ paths:
           description: allowed to be empty
           schema:
             type: string
+        - name: includeRawMaterials
+          in: query
+          required: false
+          description: allowed to be empty
+          schema:
+            type: boolean            
+            enum: [true,false]
       responses:
         '200':
           description: Calculation triggered
