@@ -352,9 +352,14 @@ paths:
       tags:
       - "Data Upload"
       summary: Get scenario status 
-      description:  Retruns the status of the selected scenarion or all scenarios
+      description:  Retruns the status of the selected scenarion or all scenarios. Requires either 'scenario_id' or 'scenario_name' as a query parameter.
       parameters:
         - name: scenario_id
+          in: query
+          required: false
+          schema:
+            type: string
+        - name: scenario_name
           in: query
           required: false
           schema:
@@ -424,11 +429,14 @@ paths:
       tags:
       - "Data Upload"
       summary: Update scenario and calculate
-      description: Used to update a specific scenario (e.g uploaded data has changed), also the calculation is triggered.
+      description: Used to update a specific scenario (e.g uploaded data has changed), also the calculation is triggered.  Requires either 'scenario_id' or 'scenario_name' as a query parameter.
       parameters:
         - name: scenario_id
           in: query
-          required: true
+          schema:
+            type: string
+        - name: scenario_name
+          in: query:
           schema:
             type: string
         - name: bucket_name
@@ -457,11 +465,14 @@ paths:
       tags:
       - "Data Upload"
       summary: Trigger a scenario calculation
-      description: Used to manually trigger a re-calculation of a scenario
+      description: Used to manually trigger a re-calculation of a scenario.  Requires either 'scenario_id' or 'scenario_name' as a query parameter.  Requires either 'scenario_id' or 'scenario_name' as a query parameter.
       parameters:
         - name: scenario_id
           in: query
-          required: true
+          schema:
+            type: string
+        - name: scenario_name
+          in: query
           schema:
             type: string
       responses:
@@ -478,6 +489,35 @@ paths:
       description: Used to dowload scenario calculation results, if no scenarioId will be provided the default scenario will be provided
       parameters:
         - name: scenarioId
+          in: path
+          required: true
+          description: allowed to be empty
+          schema:
+            type: string
+        - name: includeRawMaterials
+          in: query
+          required: false
+          description: allowed to be empty
+          schema:
+            type: boolean            
+            enum: [true,false]
+      responses:
+        '200':
+          description: Calculation triggered
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Results'
+/s2sapi/v1/scenario/results_by_name/{scenarioName}:
+    get:
+      security:
+      - bearerAuth: []
+      tags:
+      - "Result Export"
+      summary: Trigger a scenario result download
+      description: Used to dowload scenario calculation results, if no scenarioId will be provided the default scenario will be provided
+      parameters:
+        - name: scenarioName
           in: path
           required: true
           description: allowed to be empty
