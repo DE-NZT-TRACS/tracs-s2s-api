@@ -44,7 +44,7 @@ components:
           type: string
           description: Id of the scenario.
         numTotalEntries:
-          type: float
+          type: integer
           description: Number of entries. 
         data:
           type: array
@@ -436,7 +436,7 @@ paths:
           schema:
             type: string
         - name: scenario_name
-          in: query:
+          in: query
           schema:
             type: string
         - name: bucket_name
@@ -508,7 +508,7 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Results'
-/s2sapi/v1/scenario/results_by_name/{scenarioName}:
+  /s2sapi/v1/scenario/results_by_name/{scenarioName}:
     get:
       security:
       - bearerAuth: []
