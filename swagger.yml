@@ -485,7 +485,7 @@ paths:
       - bearerAuth: []
       tags:
       - "Result Export"
-      summary: Trigger a scenario result download
+      summary: Trigger a scenario result download, by scenario-Id
       description: Used to dowload scenario calculation results, if no scenarioId will be provided the default scenario will be provided
       parameters:
         - name: scenarioId
@@ -514,7 +514,7 @@ paths:
       - bearerAuth: []
       tags:
       - "Result Export"
-      summary: Trigger a scenario result download
+      summary: Trigger a scenario result download by scenario-name
       description: Used to dowload scenario calculation results, if no scenarioId will be provided the default scenario will be provided
       parameters:
         - name: scenarioName
