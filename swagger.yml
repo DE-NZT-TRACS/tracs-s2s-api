@@ -178,7 +178,231 @@ components:
                 type: number
               carbonContentBiogenic:
                 type: number
-       
+    DetailResults:   
+      type: object
+      properties:
+        org_code:
+          type: string
+          example: OC-29
+        org_code_txt:
+          type: string
+          example: HA029
+        unit_process:
+          type: string
+          example: UP-189
+        unit_process_txt:
+          type: string
+          example: "0000000189"
+        product:
+          type: string
+          example: MAT-104
+        product_txt:
+          type: string
+          example: LuminaLiquid 200
+        data:
+          type: object
+          properties:
+            LAND:
+              type: object
+              properties:
+                impact_category_txt:
+                  type: string
+                  example: Land Use
+                impact_category_indicator:
+                  type: string
+                  example: Soil Quality Index (SQI)
+                unit:
+                  type: string
+                  example: SQI
+                total_emissions:
+                  type: number
+                  format: float
+                  example: 6.219975325719036
+                total_raw_material_emissions:
+                  type: number
+                  format: float
+                  example: 0.0
+                total_utility_emissions:
+                  type: number
+                  format: float
+                  example: 6.219975325719036
+                total_transport_emissions:
+                  type: number
+                  format: float
+                  example: 0.0
+                raw_materials:
+                  type: array
+                  items: {}
+                utilities:
+                  type: array
+                  items:
+                    type: object
+                    properties:
+                      utility_class:
+                        type: string
+                        example: F
+                      utility_class_txt:
+                        type: string
+                        example: Electricity
+                      emission_contribution:
+                        type: number
+                        format: float
+                        example: 6.219975325719036
+                      percentage_emission_contribution:
+                        type: number
+                        format: float
+                        example: 100.0
+                      percentage_total_emission_contribution:
+                        type: number
+                        format: float
+                        example: 100.0
+                transports:
+                  type: object
+                  properties:
+                    inbound:
+                      type: number
+                      format: float
+                      example: 0.0
+                    internal:
+                      type: number
+                      format: float
+                      example: 0.0
+            WATER:
+              type: object
+              properties:
+                impact_category_txt:
+                  type: string
+                  example: Land Use
+                impact_category_indicator:
+                  type: string
+                  example: Soil Quality Index (SQI)
+                unit:
+                  type: string
+                  example: SQI
+                total_emissions:
+                  type: number
+                  format: float
+                  example: 6.219975325719036
+                total_raw_material_emissions:
+                  type: number
+                  format: float
+                  example: 0.0
+                total_utility_emissions:
+                  type: number
+                  format: float
+                  example: 6.219975325719036
+                total_transport_emissions:
+                  type: number
+                  format: float
+                  example: 0.0
+                raw_materials:
+                  type: array
+                  items: {}
+                utilities:
+                  type: array
+                  items:
+                    type: object
+                    properties:
+                      utility_class:
+                        type: string
+                        example: F
+                      utility_class_txt:
+                        type: string
+                        example: Electricity
+                      emission_contribution:
+                        type: number
+                        format: float
+                        example: 6.219975325719036
+                      percentage_emission_contribution:
+                        type: number
+                        format: float
+                        example: 100.0
+                      percentage_total_emission_contribution:
+                        type: number
+                        format: float
+                        example: 100.0
+                transports:
+                  type: object
+                  properties:
+                    inbound:
+                      type: number
+                      format: float
+                      example: 0.0
+                    internal:
+                      type: number
+                      format: float
+                      example: 0.0
+            GHG:
+              type: object
+              properties:
+                impact_category_txt:
+                  type: string
+                  example: Climate Change
+                impact_category_indicator:
+                  type: string
+                  example: Global Warming Potential (GWP100)
+                unit:
+                  type: string
+                  example: kg CO2-Eq
+                total_emissions:
+                  type: number
+                  format: float
+                  example: 2.435357264733523
+                total_raw_material_emissions:
+                  type: number
+                  format: float
+                  example: 1.846677839
+                total_utility_emissions:
+                  type: number
+                  format: float
+                  example: 0.568051208112302
+                total_transport_emissions:
+                  type: number
+                  format: float
+                  example: 0.020628217621220506
+                raw_materials:
+                  type: array
+                  items:
+                    type: object
+                    properties:
+                      material:
+                        type: string
+                        example: MAT-0
+                      material_txt:
+                        type: string
+                        example: Acrochem A-27
+                      scope_total:
+                        type: number
+                        format: float
+                        example: 1.8812410052961108
+                      emission_contribution:
+                        type: number
+                        format: float
+                        example: 0.023999136
+                      percentage_emission_contribution:
+                        type: number
+                        format: float
+                        example: 1.2990382095266906
+                      percentage_total_emission_contribution:
+                        type: number
+                        format: float
+                        example: 0.9960353462542162
+                utilities:
+                  type: array
+                  items:
+                    type: object
+                    # ... (Similar structure to utilities in LAND) 
+                transports:
+                  type: object
+                  properties:
+                    inbound:
+                      type: number
+                      format: float
+                      example: 0.0
+                    internal:
+                      type: number
+                      format: float
+                      example: 0.020628217621220506
 paths:
   /s2sapi/v1/auth/token:
     post:
@@ -503,7 +727,7 @@ paths:
             enum: [true,false]
       responses:
         '200':
-          description: Calculation triggered
+          description: Get calculated resluts per scencario
           content:
             application/json:
               schema:
@@ -532,8 +756,50 @@ paths:
             enum: [true,false]
       responses:
         '200':
-          description: Calculation triggered
+          description: Get calculated resluts per scencario
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/Results'
+  /s2sapi/v1/scenario/detail-results/{scenarioId}:
+    get:
+      security:
+      - bearerAuth: []
+      tags:
+      - "Result Export"
+      summary: Trigger a detailed result for a given scenarioId, org_code, unit_process and product
+      description: Used to dowload a detailed report of differnt LCIA categories for a given product, org_code,unit_process and scnearioId
+      parameters:
+        - name: scenarioId
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: org_code
+          in: query
+          required: true
+          schema:
+            type: string
+        - name: unit_process
+          in: query
+          required: true
+          schema:
+            type: string            
+        - name: product
+          in: query
+          required: true
+          schema:
+            type: string            
+        - name: excel_format
+          in: query
+          required: false
+          schema:
+            type: boolean            
+            enum: [true,false]
+      responses:
+        '200':
+          description: Get calculated detail-results per product, org_code,unit_process and scnearioId
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DetailResults'                
