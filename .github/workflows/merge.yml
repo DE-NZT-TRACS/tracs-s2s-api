@@ -1,0 +1,73 @@
+name: Merge and tag branch (triggered remotly by devops-tracs project)
+on:
+
+  repository_dispatch:
+    types: [start-merge-and-tag]      
+    
+jobs:
+  sync-branch:
+    runs-on: ubuntu-latest
+  
+    steps:
+      - name: Merge ${{ github.event.client_payload.merge_source }} -> Merge ${{ github.event.client_payload.merge_target }}
+        uses: devmasx/merge-branch@1.4.0
+        with:
+          type: now
+          from_branch: ${{ github.event.client_payload.merge_source }}
+          target_branch: ${{ github.event.client_payload.merge_target }}
+          github_token: ${{ secrets.ACTIONS_TOKEN }}
+     
+      - name: Merge ${{ github.event.client_payload.merge_source }} -> Merge ${{ github.event.client_payload.merge_target }} failed
+        if: ${{ failure() }}
+        uses: peter-evans/repository-dispatch@v3
+        with:
+          token: ${{ secrets.ACTIONS_TOKEN }}
+          repository: DE-NZT-TRACS/devops-tracs
+          event-type: finished-merge-and-tag
+          client-payload: '{"repo_name": "${{ github.event.repository.name }}","status": "failed" ,"message": "Failed merge"}'
+
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          ref: ${{ github.event.client_payload.merge_target }} 
+          
+      - uses: nrwl/nx-set-shas@v3
+        if: ${{ success() }}
+        id: gethashstep
+        
+      
+      - name: Check get commit hash
+        if: ${{ failure() && steps.gethashstep.conclusion == 'failure' }}
+        uses: peter-evans/repository-dispatch@v3
+        with:
+          token: ${{ secrets.ACTIONS_TOKEN }}
+          repository: DE-NZT-TRACS/devops-tracs
+          event-type: finished-merge-and-tag
+          client-payload: '{"repo_name": "${{ github.event.repository.name }}","status": "failed" ,"message": "Get Commit hash failed"}'
+      
+      - name: Bump version and push tag
+        if: ${{ success() }}
+        uses: mathieudutour/github-tag-action@v6.1
+        id: tagstep
+        with:
+          custom_tag: ${{ github.event.client_payload.tag_name }}
+          commit_sha: ${{ env.NX_HEAD }}
+          github_token: ${{ secrets.ACTIONS_TOKEN }}       
+
+      - name: Bump version and push tag failed
+        if: ${{ failure() && steps.tagstep.conclusion == 'failure' }}
+        uses: peter-evans/repository-dispatch@v3
+        with:
+          token: ${{ secrets.ACTIONS_TOKEN }}
+          repository: DE-NZT-TRACS/devops-tracs
+          event-type: finished-merge-and-tag
+          client-payload: '{"repo_name": "${{ github.event.repository.name }}","status": "failed" ,"message": "Bump version and push tag failed"}'
+      
+      - name: Repository Dispatch
+        if: ${{ success() }}
+        uses: peter-evans/repository-dispatch@v3
+        with:
+          token: ${{ secrets.ACTIONS_TOKEN }}
+          repository: DE-NZT-TRACS/devops-tracs
+          event-type: finished-merge-and-tag
+          client-payload: '{"repo_name": "${{ github.event.repository.name }}","status": "completed" ,"message": "Done"}'

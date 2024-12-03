@@ -1,0 +1,42 @@
+name: Tags branch (triggered remotly by devops-tracs project))
+on:
+
+  repository_dispatch:
+    types: [add-tag]      
+    
+jobs:
+  sync-branch:
+    runs-on: ubuntu-latest
+  
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          ref: ${{ github.event.client_payload.branch }} 
+      
+      - uses: nrwl/nx-set-shas@v3
+
+      - name: Bump version and push tag
+        uses: mathieudutour/github-tag-action@v6.2
+        with:
+          custom_tag: ${{ github.event.client_payload.tag_name }}
+          commit_sha: ${{ env.NX_HEAD }}
+          github_token: ${{ secrets.ACTIONS_TOKEN }}       
+
+      - name: Bump version and push tag failed
+        if: ${{ failure() }}
+        uses: peter-evans/repository-dispatch@v3
+        with:
+          token: ${{ secrets.ACTIONS_TOKEN }}
+          repository: DE-NZT-TRACS/devops-tracs
+          event-type: finished-tag
+          client-payload: '{"repo_name": "${{ github.event.repository.name }}","status": "failed" ,"message": "Bump version and push tag failed"}'
+      
+      - name: Repository Dispatch
+        if: ${{ success() }}
+        uses: peter-evans/repository-dispatch@v3
+        with:
+          token: ${{ secrets.ACTIONS_TOKEN }}
+          repository: DE-NZT-TRACS/devops-tracs
+          event-type: finished-tag
+          client-payload: '{"repo_name": "${{ github.event.repository.name }}","status": "completed" ,"message": "Done"}'
