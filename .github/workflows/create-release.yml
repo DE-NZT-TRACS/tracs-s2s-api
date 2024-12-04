@@ -21,15 +21,15 @@ jobs:
     - name: Add header
       run: |
         echo "" > ../release_notes.txt  
-    - id: release-note
-      uses: DE-NZT-TRACS/tracs-githubaction-releasenote@v5
-      with:
-        repo-name: DE-NZT-TRACS/tracs-s2s-api
-        branch-name: "main"
-        jira-token: ${{ secrets.JIRA_API_TOKEN }}
-        jira-url: "https://jira.fsc.atos-services.net"
-        github-token: ${{ secrets.ACTIONS_TOKEN }}
-        file-destination: .  
+    #- id: release-note
+    #  uses: DE-NZT-TRACS/tracs-githubaction-releasenote@v5
+    #  with:
+    #    repo-name: DE-NZT-TRACS/tracs-s2s-api
+    #    branch-name: "main"
+    #    jira-token: ${{ secrets.JIRA_API_TOKEN }}
+    #    jira-url: "https://jira.fsc.atos-services.net"
+    #    github-token: ${{ secrets.ACTIONS_TOKEN }}
+    #    file-destination: .  
     - name: Create Release
       uses: ncipollo/release-action@v1
       env:
