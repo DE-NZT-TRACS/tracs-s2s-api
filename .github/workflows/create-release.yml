@@ -24,7 +24,7 @@ jobs:
     - id: release-note
       uses: DE-NZT-TRACS/tracs-githubaction-releasenote@v5
       with:
-        repo-name: DE-NZT-TRACS/tracs-serverless-functions
+        repo-name: DE-NZT-TRACS/tracs-s2s-api
         branch-name: "main"
         jira-token: ${{ secrets.JIRA_API_TOKEN }}
         jira-url: "https://jira.fsc.atos-services.net"
