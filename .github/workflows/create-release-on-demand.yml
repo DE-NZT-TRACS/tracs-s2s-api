@@ -1,0 +1,46 @@
+name: Release Workflow on demand
+run-name: Build Release ${{ inputs.GIT_RELEASE_TAG }}
+on:
+  workflow_dispatch:
+    inputs:
+     GIT_RELEASE_TAG:
+       description: 'Tag we want to build a Release for'
+       required: true
+     PREVIOUS_RELEASE_TAG:
+       description: 'In order to build a correct release not we need the tag of the previous version'  
+       required: true
+
+jobs:
+  build: 
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+    - uses: actions/checkout@v4
+      with:
+        fetch-depth: 0
+        ref: main
+        #ref: ${{ needs.getbranch.outputs.branch_name }}
+    - name: Add header
+      run: |
+        echo "" > ../release_notes.txt  
+    - id: release-note
+      uses: DE-NZT-TRACS/tracs-githubaction-releasenote@v3
+      with:
+        repo-name: DE-NZT-TRACS/tracs-s2s-api
+        branch-name: "main"
+        tag-name: ${{ github.event.inputs.GIT_RELEASE_TAG }}
+        prev-tag-name: ${{ github.event.inputs.PREVIOUS_RELEASE_TAG }}
+        jira-token: ${{ secrets.JIRA_API_TOKEN }}
+        jira-url: "https://jira.fsc.atos-services.net"
+        github-token: ${{ secrets.ACTIONS_TOKEN }}
+        file-destination: . 
+    - name: Create Release
+      uses: ncipollo/release-action@v1
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      with:
+        tag: ${{ github.event.inputs.GIT_RELEASE_TAG }}
+        #name: Release ${{ github.ref }}
+        bodyFile: ../release_notes.txt
+        #body: ${{ steps.set-release-notes.outputs.RELEASE_NOTES }}
